@@ -10,7 +10,9 @@ app.secret_key = 'change-this-secret-key'
 # ==================== DATABASE SETUP ====================
 
 basedir = os.path.abspath(os.path.dirname(__file__))
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'eee_learnhub.db')
+db_dir = os.path.join(basedir, 'instance')
+os.makedirs(db_dir, exist_ok=True)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(db_dir, 'eee_learnhub.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['UPLOAD_FOLDER'] = os.path.join(app.static_folder, 'uploads', 'notes')
 app.config['INTERVIEW_UPLOAD_FOLDER'] = os.path.join(app.static_folder, 'uploads', 'interview')
@@ -1122,8 +1124,9 @@ def edit_question(question_id):
     return redirect(url_for('admin'))
 
 
+with app.app_context():
+    db.create_all()
+    seed_data()
+
 if __name__ == '__main__':
-    with app.app_context():
-        db.create_all()
-        seed_data()
     app.run(debug=True)
