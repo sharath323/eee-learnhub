@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>EEE LearnHub | Dashboard</title>
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+</head>
+<body>
+
+	<header class="navbar">
+		<h2>EEE LearnHub ⚡</h2>
+		<button class="logout-btn">Logout</button>
+	</header>
+
+	<main class="container">
+		<h3>Select Your Semester</h3>
+
+		<div class="semester-grid">
+			<div class="card" onclick="location.href='{{ url_for('subjects') }}'">Semester 1</div>
+			<div class="card" onclick="location.href='{{ url_for('subjects') }}'">Semester 2</div>
+			<div class="card" onclick="location.href='{{ url_for('subjects') }}'">Semester 3</div>
+			<div class="card" onclick="location.href='{{ url_for('subjects') }}'">Semester 4</div>
+			<div class="card" onclick="location.href='{{ url_for('subjects') }}'">Semester 5</div>
+			<div class="card" onclick="location.href='{{ url_for('subjects') }}'">Semester 6</div>
+			<div class="card" onclick="location.href='{{ url_for('subjects') }}'">Semester 7</div>
+			<div class="card" onclick="location.href='{{ url_for('subjects') }}'">Semester 8</div>
+		</div>
+	</main>
+
+</body>
+</html>

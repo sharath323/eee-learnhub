@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subjects | EEE LearnHub</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/subjects.css') }}">
+</head>
+<body>
+
+    <header class="navbar">
+        <h2>EEE LearnHub &#9889;</h2>
+        <div style="display: flex; gap: 12px; align-items: center;">
+            <a href="{{ url_for('notifications') }}" class="back-btn" title="Notifications">
+                <span class="notif-icon" aria-hidden="true"></span>
+                {% if unread_count and unread_count > 0 %}
+                    <span class="notif-badge">{{ unread_count }}</span>
+                {% endif %}
+            </a>
+            <a href="{{ url_for('profile') }}" class="back-btn" title="Profile">
+                <span class="profile-icon" aria-hidden="true"></span>
+            </a>
+            <a href="{{ url_for('logout') }}" class="back-btn">Logout</a>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="action-row">
+            <a href="{{ url_for('contact') }}" class="icon-btn" title="Contact Admin">
+                <span class="chat-icon" aria-hidden="true"></span>
+                {% if admin_reply_unread and admin_reply_unread > 0 %}
+                    <span class="notif-badge">1</span>
+                {% endif %}
+            </a>
+        </div>
+        <h3>Subjects</h3>
+
+        <div class="subject-grid">
+            {% for subject in subjects %}
+                <div class="card" onclick="location.href='{{ url_for('topics', subject_id=subject.id) }}'">
+                    <div style="font-weight: 600;">{{ subject.name }}</div>
+                    <div class="progress-wrap">
+                        <div class="progress-bar" style="width: {{ progress[subject.id].percent }}%;"></div>
+                    </div>
+                    <div class="progress-text">
+                        {{ progress[subject.id].percent }}% ({{ progress[subject.id].completed }}/{{ progress[subject.id].total }} videos)
+                    </div>
+                    <div style="margin-top: 6px;"></div>
+                </div>
+            {% else %}
+                <p>No subjects found. Add data to the database.</p>
+            {% endfor %}
+        </div>
+    </main>
+
+</body>
+</html>

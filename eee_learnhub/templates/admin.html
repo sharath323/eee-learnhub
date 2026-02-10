@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin | EEE LearnHub</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/subjects.css') }}">
+</head>
+<body>
+
+    <header class="navbar">
+        <h2>EEE LearnHub &#9889;</h2>
+        <div style="display: flex; gap: 12px; align-items: center;">
+            <a href="{{ url_for('subjects') }}" class="back-btn">&larr; Back</a>
+            <a href="{{ url_for('admin_logout') }}" class="back-btn">Logout</a>
+        </div>
+    </header>
+
+    <main class="container">
+        <h3>Admin Panel</h3>
+
+        <p style="margin-bottom: 16px; color: #64748b;">
+            Use the sections below to add or manage content. Each section can be expanded or collapsed.
+        </p>
+
+        <details open style="margin-bottom: 18px;">
+            <summary style="font-weight: 600; cursor: pointer; margin-bottom: 12px;">Add Subject</summary>
+            <form method="post">
+                <input type="hidden" name="form_type" value="subject">
+                <input type="text" name="subject_name" placeholder="Subject name" required>
+                <button type="submit" class="login-btn">Add Subject</button>
+            </form>
+        </details>
+
+        <details style="margin-bottom: 18px;">
+            <summary style="font-weight: 600; cursor: pointer; margin-bottom: 12px;">Add Topic</summary>
+            <form method="post">
+                <input type="hidden" name="form_type" value="topic">
+                <input type="text" name="topic_name" placeholder="Topic name" required>
+                <select name="subject_id" required>
+                    <option value="">Select subject</option>
+                    {% for subject in subjects %}
+                        <option value="{{ subject.id }}">{{ subject.name }}</option>
+                    {% endfor %}
+                </select>
+                <button type="submit" class="login-btn">Add Topic</button>
+            </form>
+        </details>
+
+        <details style="margin-bottom: 18px;">
+            <summary style="font-weight: 600; cursor: pointer; margin-bottom: 12px;">Add Video</summary>
+            <form method="post">
+                <input type="hidden" name="form_type" value="video">
+                <input type="text" name="video_title" placeholder="Video title" required>
+                <input type="text" name="youtube_id" placeholder="YouTube ID (not full link)" required>
+                <select name="topic_id" required>
+                    <option value="">Select topic</option>
+                    {% for topic in topics %}
+                        <option value="{{ topic.id }}">{{ topic.name }}</option>
+                    {% endfor %}
+                </select>
+                <button type="submit" class="login-btn">Add Video</button>
+            </form>
+        </details>
+
+        <details style="margin-bottom: 18px;">
+            <summary style="font-weight: 600; cursor: pointer; margin-bottom: 12px;">Add Note (PDF upload)</summary>
+            <form method="post" enctype="multipart/form-data">
+                <input type="hidden" name="form_type" value="note">
+                <input type="text" name="note_title" placeholder="Note title" required>
+                <input type="file" name="note_file" accept=".pdf" required>
+                <select name="topic_id" required>
+                    <option value="">Select topic</option>
+                    {% for topic in topics %}
+                        <option value="{{ topic.id }}">{{ topic.name }}</option>
+                    {% endfor %}
+                </select>
+                <button type="submit" class="login-btn">Add Note</button>
+            </form>
+        </details>
+
+        <details style="margin-bottom: 28px;">
+            <summary style="font-weight: 600; cursor: pointer; margin-bottom: 12px;">Add Question</summary>
+            <form method="post">
+                <input type="hidden" name="form_type" value="question">
+                <input type="text" name="question_text" placeholder="Question text" required>
+                <select name="topic_id" required>
+                    <option value="">Select topic</option>
+                    {% for topic in topics %}
+                        <option value="{{ topic.id }}">{{ topic.name }}</option>
+                    {% endfor %}
+                </select>
+                <button type="submit" class="login-btn">Add Question</button>
+            </form>
+        </details>
+
+        <details open style="margin-top: 10px;">
+            <summary style="font-weight: 700; cursor: pointer; margin-bottom: 12px;">Manage Subjects</summary>
+            {% for subject in subjects %}
+                <div style="display: flex; gap: 10px; margin-bottom: 12px; align-items: center;">
+                    <form method="post" action="{{ url_for('edit_subject', subject_id=subject.id) }}" style="flex: 1; display: flex; gap: 10px;">
+                        <input type="text" name="subject_name" value="{{ subject.name }}" required>
+                        <button type="submit" class="login-btn">Update</button>
+                    </form>
+                    <form method="post" action="{{ url_for('delete_subject', subject_id=subject.id) }}">
+                        <button type="submit" class="login-btn" style="background: #ef4444;">Delete</button>
+                    </form>
+                </div>
+            {% else %}
+                <p>No subjects yet.</p>
+            {% endfor %}
+        </details>
+
+        <details style="margin-top: 20px;">
+            <summary style="font-weight: 700; cursor: pointer; margin-bottom: 12px;">Manage Content by Subject</summary>
+            {% for subject in subjects %}
+                <details style="margin-bottom: 14px; padding: 10px; border: 1px solid rgba(148, 163, 184, 0.4); border-radius: 12px; background: #ffffff;">
+                    <summary style="font-weight: 700; cursor: pointer; margin-bottom: 8px;">{{ subject.name }}</summary>
+
+                    {% for topic in topics if topic.subject_id == subject.id %}
+                        <div style="margin: 10px 0; padding-left: 10px; border-left: 3px solid rgba(14, 165, 233, 0.4);">
+                            <div style="font-weight: 600; margin-bottom: 6px;">Topic: {{ topic.name }}</div>
+
+                            <div style="margin-bottom: 8px;">
+                                <div style="font-size: 12px; color: #64748b; margin-bottom: 4px;">Videos</div>
+                                {% for video in videos if video.topic_id == topic.id %}
+                                    <div style="display: flex; gap: 10px; margin-bottom: 6px; align-items: center;">
+                                        <form method="post" action="{{ url_for('edit_video', video_id=video.id) }}" style="flex: 1; display: flex; gap: 10px;">
+                                            <input type="text" name="video_title" value="{{ video.title }}" required>
+                                            <input type="text" name="youtube_id" value="{{ video.youtube_id }}" required>
+                                            <button type="submit" class="login-btn">Update</button>
+                                        </form>
+                                        <form method="post" action="{{ url_for('delete_video', video_id=video.id) }}">
+                                            <button type="submit" class="login-btn" style="background: #ef4444;">Delete</button>
+                                        </form>
+                                    </div>
+                                {% else %}
+                                    <div style="font-size: 12px; color: #94a3b8;">No videos.</div>
+                                {% endfor %}
+                            </div>
+
+                            <div style="margin-bottom: 8px;">
+                                <div style="font-size: 12px; color: #64748b; margin-bottom: 4px;">Notes</div>
+                                {% for note in notes if note.topic_id == topic.id %}
+                                    <div style="display: flex; gap: 10px; margin-bottom: 6px; align-items: center;">
+                                        <form method="post" action="{{ url_for('edit_note', note_id=note.id) }}" style="flex: 1; display: flex; gap: 10px;">
+                                            <input type="text" name="note_title" value="{{ note.title }}" required>
+                                            <button type="submit" class="login-btn">Update</button>
+                                        </form>
+                                        <form method="post" action="{{ url_for('delete_note', note_id=note.id) }}">
+                                            <button type="submit" class="login-btn" style="background: #ef4444;">Delete</button>
+                                        </form>
+                                    </div>
+                                {% else %}
+                                    <div style="font-size: 12px; color: #94a3b8;">No notes.</div>
+                                {% endfor %}
+                            </div>
+
+                            <div style="margin-bottom: 8px;">
+                                <div style="font-size: 12px; color: #64748b; margin-bottom: 4px;">Questions</div>
+                                {% for question in questions if question.topic_id == topic.id %}
+                                    <div style="display: flex; gap: 10px; margin-bottom: 6px; align-items: center;">
+                                        <form method="post" action="{{ url_for('edit_question', question_id=question.id) }}" style="flex: 1; display: flex; gap: 10px;">
+                                            <input type="text" name="question_text" value="{{ question.text }}" required>
+                                            <button type="submit" class="login-btn">Update</button>
+                                        </form>
+                                        <form method="post" action="{{ url_for('delete_question', question_id=question.id) }}">
+                                            <button type="submit" class="login-btn" style="background: #ef4444;">Delete</button>
+                                        </form>
+                                    </div>
+                                {% else %}
+                                    <div style="font-size: 12px; color: #94a3b8;">No questions.</div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% else %}
+                        <div style="font-size: 12px; color: #94a3b8;">No topics.</div>
+                    {% endfor %}
+                </details>
+            {% else %}
+                <p>No subjects yet.</p>
+            {% endfor %}
+        </details>
+
+        <details style="margin-top: 20px;" open>
+            <summary style="font-weight: 700; cursor: pointer; margin-bottom: 12px;">
+                Messages From Students
+                {% if admin_unread_msg and admin_unread_msg > 0 %}
+                    <span class="notif-badge">New</span>
+                {% endif %}
+            </summary>
+            {% for key, thread in messages_by_user.items() %}
+                <details style="margin-bottom: 14px; padding: 10px; border: 1px solid rgba(148, 163, 184, 0.4); border-radius: 12px; background: #ffffff;" data-user-id="{{ thread.user_id }}">
+                    <summary style="font-weight: 700; cursor: pointer; margin-bottom: 8px;">
+                        {{ thread.name }} ({{ thread.email }})
+                        {% if thread.new %}
+                            <span class="notif-badge">New</span>
+                        {% endif %}
+                    </summary>
+                    {% for msg in thread.messages|reverse %}
+                        <div style="display: flex; justify-content: {% if msg.sender == 'admin' %}flex-end{% else %}flex-start{% endif %}; margin-bottom: 8px;">
+                            <div style="padding: 10px 12px; border-radius: 10px; max-width: 80%; background: {% if msg.sender == 'admin' %}#dbeafe{% else %}#f1f5f9{% endif %}; color: #0f172a; border: {% if msg.sender == 'admin' %}1px solid #60a5fa{% else %}1px solid rgba(148, 163, 184, 0.4){% endif %};">
+                                {% if msg.sender == 'admin' %}
+                                    <div style="font-size: 11px; font-weight: 700; color: #2563eb; margin-bottom: 4px;">Admin</div>
+                                {% endif %}
+                                {{ msg.text }}
+                            </div>
+                        </div>
+                    {% endfor %}
+                    <form method="post" action="{{ url_for('admin_reply', user_id=thread.user_id) }}" style="display: flex; gap: 10px; margin-top: 6px;">
+                        <input type="text" name="reply_text" placeholder="Reply to {{ thread.name }}" required>
+                        <button type="submit" class="login-btn">Send</button>
+                    </form>
+                </details>
+            {% else %}
+                <p>No messages yet.</p>
+            {% endfor %}
+        </details>
+        <script>
+            document.querySelectorAll('details[data-user-id]').forEach(function(detail) {
+                detail.addEventListener('toggle', function() {
+                    if (detail.open) {
+                        var userId = detail.getAttribute('data-user-id');
+                        fetch('/admin/messages/' + userId + '/mark_read', { method: 'POST' })
+                            .then(function() {
+                                var badge = detail.querySelector('.notif-badge');
+                                if (badge) badge.remove();
+                            });
+                    }
+                });
+            });
+        </script>
+
+        <details style="margin-top: 20px;">
+            <summary style="font-weight: 700; cursor: pointer; margin-bottom: 12px;">Broadcast Notifications</summary>
+            <form method="post" style="margin-bottom: 14px;">
+                <input type="hidden" name="form_type" value="notification">
+                <input type="text" name="notification_title" placeholder="Notification title" required>
+                <input type="text" name="notification_body" placeholder="Notification message" required>
+                <button type="submit" class="login-btn">Send Notification</button>
+            </form>
+
+            {% for n in notifications %}
+                <div style="display: flex; gap: 10px; margin-bottom: 10px; align-items: center;">
+                    <form method="post" action="{{ url_for('edit_notification', notification_id=n.id) }}" style="flex: 1; display: flex; gap: 10px;">
+                        <input type="text" name="notification_title" value="{{ n.title }}" required>
+                        <input type="text" name="notification_body" value="{{ n.body }}" required>
+                        <button type="submit" class="login-btn">Update</button>
+                    </form>
+                    <form method="post" action="{{ url_for('delete_notification', notification_id=n.id) }}">
+                        <button type="submit" class="login-btn" style="background: #ef4444;">Delete</button>
+                    </form>
+                </div>
+            {% else %}
+                <p>No notifications yet.</p>
+            {% endfor %}
+        </details>
+
+        <details style="margin-top: 20px;">
+            <summary style="font-weight: 700; cursor: pointer; margin-bottom: 12px;">Interview Preparation (Per Subject)</summary>
+            <form method="post" enctype="multipart/form-data" style="margin-bottom: 14px;">
+                <input type="hidden" name="form_type" value="interview">
+                <select name="subject_id" required>
+                    <option value="">Select subject</option>
+                    {% for subject in subjects %}
+                        <option value="{{ subject.id }}">{{ subject.name }}</option>
+                    {% endfor %}
+                </select>
+                <input type="text" name="interview_title" placeholder="Interview topic title" required>
+                <input type="text" name="interview_content" placeholder="Short content" required>
+                <input type="file" name="interview_file" accept=".pdf">
+                <button type="submit" class="login-btn">Add Interview Content</button>
+            </form>
+
+            {% for item in interviews %}
+                <div style="display: flex; gap: 10px; margin-bottom: 10px; align-items: center;">
+                    <form method="post" enctype="multipart/form-data" action="{{ url_for('edit_interview', interview_id=item.id) }}" style="flex: 1; display: flex; gap: 10px;">
+                        <input type="text" name="interview_title" value="{{ item.title }}" required>
+                        <input type="text" name="interview_content" value="{{ item.content }}" required>
+                        <input type="file" name="interview_file" accept=".pdf">
+                        <button type="submit" class="login-btn">Update</button>
+                    </form>
+                    <form method="post" action="{{ url_for('delete_interview', interview_id=item.id) }}">
+                        <button type="submit" class="login-btn" style="background: #ef4444;">Delete</button>
+                    </form>
+                </div>
+            {% else %}
+                <p>No interview preparation content yet.</p>
+            {% endfor %}
+        </details>
+
+        <details style="margin-top: 20px;">
+            <summary style="font-weight: 700; cursor: pointer; margin-bottom: 12px;">Students</summary>
+            <p style="margin-bottom: 10px; color: #64748b;">Total Students: {{ students|length }}</p>
+            {% for student in students %}
+                <div style="padding: 10px 12px; border: 1px solid rgba(148, 163, 184, 0.4); border-radius: 10px; margin-bottom: 8px; background: #ffffff;">
+                    <div style="font-weight: 600;">{{ student.name }}</div>
+                    <div style="color: #475569;">{{ student.email }}</div>
+                </div>
+            {% else %}
+                <p>No students registered yet.</p>
+            {% endfor %}
+        </details>
+    </main>
+
+</body>
+</html>

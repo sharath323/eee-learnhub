@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>EEE LearnHub | Login</title>
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+	<div class="login-container">
+		<div class="login-card">
+			<h1>EEE LearnHub</h1>
+			<p class="subtitle">Learn Electrical Engineering the smart way &#9889;</p>
+
+			<button class="google-btn">
+				<img src="https://img.icons8.com/color/48/google-logo.png" alt="Google">
+				Continue with Google
+			</button>
+
+			<div class="divider">
+				<span>or</span>
+			</div>
+
+			<form action="{{ url_for('login') }}" method="post">
+				<input type="email" name="email" placeholder="Email address" required>
+				<input type="password" name="password" placeholder="Password" required>
+				<button type="submit" class="login-btn">Login</button>
+			</form>
+
+			{% if error %}
+				<p class="footer-text" style="color: #ef4444;">{{ error }}</p>
+			{% endif %}
+
+			<p class="footer-text">
+				New here? <a href="{{ url_for('register') }}">Create an account</a>
+			</p>
+			<p class="footer-text">
+				Admin? <a href="{{ url_for('admin_login') }}">Login here</a>
+			</p>
+		</div>
+	</div>
+
+</body>
+</html>

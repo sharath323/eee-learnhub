@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Contact Admin | EEE LearnHub</title>
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+	<div class="login-container">
+		<div class="login-card">
+			<h1>Contact Admin</h1>
+			<p class="subtitle">Send your message to the admin</p>
+
+			<form action="{{ url_for('contact') }}" method="post">
+				<textarea name="message" rows="5" placeholder="Write your message here..." required style="padding: 12px 14px; border-radius: 12px; border: 1px solid rgba(148, 163, 184, 0.5); resize: vertical;"></textarea>
+				<button type="submit" class="login-btn">Send Message</button>
+			</form>
+
+			{% if message %}
+				<p class="footer-text" style="color: #16a34a;">{{ message }}</p>
+			{% endif %}
+
+			<p class="footer-text">
+				<a href="{{ url_for('subjects') }}">Back to Subjects</a>
+			</p>
+
+			{% if messages %}
+				<div style="margin-top: 18px; text-align: left;">
+					<div style="font-weight: 600; margin-bottom: 8px;">Your messages</div>
+					{% for msg in messages|reverse %}
+						<div style="display: flex; justify-content: {% if msg.sender == 'admin' %}flex-start{% else %}flex-end{% endif %}; margin-bottom: 8px;">
+							<div style="padding: 10px 12px; border-radius: 10px; max-width: 80%; background: {% if msg.sender == 'admin' %}#dbeafe{% else %}#e0f2fe{% endif %}; color: #0f172a; border: {% if msg.sender == 'admin' %}1px solid #60a5fa{% else %}1px solid rgba(148, 163, 184, 0.4){% endif %};">
+								{% if msg.sender == 'admin' %}
+									<div style="font-size: 11px; font-weight: 700; color: #2563eb; margin-bottom: 4px;">Admin</div>
+								{% endif %}
+								{{ msg.text }}
+							</div>
+						</div>
+					{% endfor %}
+				</div>
+			{% endif %}
+		</div>
+	</div>
+
+</body>
+</html>

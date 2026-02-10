@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interview Prep | EEE LearnHub</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/subjects.css') }}">
+</head>
+<body>
+
+    <header class="navbar">
+        <h2>EEE LearnHub &#9889;</h2>
+        <div style="display: flex; gap: 12px; align-items: center;">
+            <a href="{{ url_for('notifications') }}" class="back-btn" title="Notifications">
+                <span class="notif-icon" aria-hidden="true"></span>
+                {% if unread_count and unread_count > 0 %}
+                    <span class="notif-badge">{{ unread_count }}</span>
+                {% endif %}
+            </a>
+            <a href="{{ url_for('subjects') }}" class="back-btn">&larr; Back</a>
+        </div>
+    </header>
+
+    <main class="container">
+        <h3>{{ subject.name }} – Interview Preparation</h3>
+
+        {% for item in items %}
+            <div style="padding: 16px 18px; border: 1px solid rgba(148, 163, 184, 0.4); border-radius: 12px; margin-bottom: 14px; background: #ffffff;">
+                <div style="font-weight: 700; margin-bottom: 8px;">{{ item.title }}</div>
+                <div style="color: #475569; margin-bottom: 10px;">{{ item.content }}</div>
+                {% if item.pdf_path %}
+                    <a class="small-link" href="{{ url_for('static', filename=item.pdf_path) }}" download>Download PDF</a>
+                {% endif %}
+            </div>
+        {% else %}
+            <p>No interview preparation content yet.</p>
+        {% endfor %}
+    </main>
+
+</body>
+</html>

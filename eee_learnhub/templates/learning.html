@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learning | EEE LearnHub</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/learning.css') }}">
+</head>
+<body>
+
+    <header class="navbar">
+        <h2>EEE LearnHub &#9889;</h2>
+        <div style="display: flex; gap: 12px; align-items: center;">
+            <a href="{{ url_for('notifications') }}" class="back-btn" title="Notifications">
+                <span class="notif-icon" aria-hidden="true"></span>
+                {% if unread_count and unread_count > 0 %}
+                    <span class="notif-badge">{{ unread_count }}</span>
+                {% endif %}
+            </a>
+            <a href="{{ url_for('topics', subject_id=topic.subject_id) }}" class="back-btn">&larr; Back</a>
+            <a href="{{ url_for('profile') }}" class="back-btn" title="Profile">
+                <span class="profile-icon" aria-hidden="true"></span>
+            </a>
+            <a href="{{ url_for('logout') }}" class="back-btn">Logout</a>
+        </div>
+    </header>
+
+    <main class="container">
+        <h3>{{ topic.name }}</h3>
+        {% if topic_completed %}
+            <div class="topic-done">All videos completed</div>
+        {% endif %}
+
+        <section class="section">
+            <h4>Video Lectures</h4>
+
+            <div class="video-grid">
+                {% for video in videos %}
+                    <div class="video-card">
+                        <div class="video-embed">
+                            <iframe src="https://www.youtube.com/embed/{{ video.youtube_id }}" allowfullscreen></iframe>
+                        </div>
+                        <div class="video-actions">
+                            <div class="video-title">{{ video.title }}</div>
+                            {% if video.id in completed_video_ids %}
+                                <div style="display: flex; gap: 8px; align-items: center;">
+                                    <div class="video-done">✓ Completed</div>
+                                    <form action="{{ url_for('uncomplete_video', video_id=video.id) }}" method="post">
+                                        <button type="submit" class="login-btn small-btn">Undo</button>
+                                    </form>
+                                </div>
+                            {% else %}
+                                <form action="{{ url_for('complete_video', video_id=video.id) }}" method="post">
+                                    <button type="submit" class="login-btn small-btn">Mark Completed</button>
+                                </form>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% else %}
+                    <p>No videos yet. Add YouTube IDs in the database.</p>
+                {% endfor %}
+            </div>
+        </section>
+
+        <section class="section">
+            <h4>Notes</h4>
+
+            <div class="notes-list">
+                {% for note in notes %}
+                    {% if note.file_path %}
+                        <a href="{{ url_for('static', filename=note.file_path) }}" class="note-card" download>
+                            {{ note.title }}
+                        </a>
+                    {% else %}
+                        <span class="note-card">{{ note.title }}</span>
+                    {% endif %}
+                {% else %}
+                    <p>No notes yet. Upload PDFs in the admin panel.</p>
+                {% endfor %}
+            </div>
+        </section>
+
+        <section class="section">
+            <h4>Important Questions</h4>
+
+            <ul class="question-list">
+                {% for question in questions %}
+                    <li>{{ question.text }}</li>
+                {% else %}
+                    <li>No questions yet. Add questions in the database.</li>
+                {% endfor %}
+            </ul>
+        </section>
+    </main>
+
+</body>
+</html>

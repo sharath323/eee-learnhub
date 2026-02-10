@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Topics | EEE LearnHub</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/topics.css') }}">
+</head>
+<body>
+
+    <header class="navbar">
+        <h2>EEE LearnHub &#9889;</h2>
+        <div style="display: flex; gap: 12px; align-items: center;">
+            <a href="{{ url_for('notifications') }}" class="back-btn" title="Notifications">
+                <span class="notif-icon" aria-hidden="true"></span>
+                {% if unread_count and unread_count > 0 %}
+                    <span class="notif-badge">{{ unread_count }}</span>
+                {% endif %}
+            </a>
+            <a href="{{ url_for('subjects') }}" class="back-btn">&larr; Back</a>
+            <a href="{{ url_for('interview', subject_id=subject.id) }}" class="back-btn">Interview Prep</a>
+            <a href="{{ url_for('profile') }}" class="back-btn" title="Profile">
+                <span class="profile-icon" aria-hidden="true"></span>
+            </a>
+            <a href="{{ url_for('logout') }}" class="back-btn">Logout</a>
+        </div>
+    </header>
+
+    <main class="container">
+        <h3>{{ subject.name }} &ndash; Topics</h3>
+
+        <div class="topic-list">
+            {% for topic in topics %}
+                <div class="topic-card" onclick="location.href='{{ url_for('learning', topic_id=topic.id) }}'">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span>{{ topic.name }}</span>
+                        {% if topic_progress[topic.id].done %}
+                            <span class="topic-tag">Completed</span>
+                        {% endif %}
+                    </div>
+                    <div class="topic-meta">
+                        {{ topic_progress[topic.id].completed }}/{{ topic_progress[topic.id].total }} videos
+                    </div>
+                </div>
+            {% else %}
+                <p>No topics found for this subject.</p>
+            {% endfor %}
+        </div>
+    </main>
+
+</body>
+</html>

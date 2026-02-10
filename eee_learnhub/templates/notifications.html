@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notifications | EEE LearnHub</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/subjects.css') }}">
+</head>
+<body>
+
+    <header class="navbar">
+        <h2>EEE LearnHub &#9889;</h2>
+        <a href="{{ url_for('subjects') }}" class="back-btn">&larr; Back</a>
+    </header>
+
+    <main class="container">
+        <h3>Notification Center</h3>
+
+        {% for note in notifications %}
+            <div style="padding: 14px 16px; border: 1px solid rgba(148, 163, 184, 0.4); border-radius: 12px; margin-bottom: 12px; background: #ffffff;">
+                <div style="font-weight: 700; margin-bottom: 6px;">{{ note.title }}</div>
+                <div style="color: #475569;">{{ note.body }}</div>
+            </div>
+        {% else %}
+            <p>No notifications yet.</p>
+        {% endfor %}
+    </main>
+
+</body>
+</html>
