@@ -462,6 +462,8 @@ def get_unread_admin_replies_count(user_id):
 
 @app.before_request
 def bootstrap_database():
+    if request.endpoint == 'health':
+        return None
     ensure_database_initialized()
 
 
