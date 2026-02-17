@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, session
 from flask_sqlalchemy import SQLAlchemy
 import os
+from threading import Lock
 from werkzeug.utils import secure_filename
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -25,6 +26,8 @@ app.config['INTERVIEW_UPLOAD_FOLDER'] = os.path.join(app.static_folder, 'uploads
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16 MB
 
 db = SQLAlchemy(app)
+db_init_lock = Lock()
+db_bootstrapped = False
 
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 os.makedirs(app.config['INTERVIEW_UPLOAD_FOLDER'], exist_ok=True)
@@ -402,6 +405,23 @@ def seed_data():
     db.session.commit()
 
 
+def ensure_database_initialized():
+    global db_bootstrapped
+    if db_bootstrapped:
+        return
+
+    with db_init_lock:
+        if db_bootstrapped:
+            return
+        try:
+            with app.app_context():
+                db.create_all()
+                seed_data()
+            db_bootstrapped = True
+        except Exception:
+            app.logger.exception('Database initialization failed')
+
+
 # ==================== AUTH HELPERS ====================
 
 ADMIN_USERNAME = 'admin'
@@ -439,6 +459,16 @@ def get_unread_admin_replies_count(user_id):
 
 
 # ==================== ROUTES ====================
+
+@app.before_request
+def bootstrap_database():
+    ensure_database_initialized()
+
+
+@app.route('/health')
+def health():
+    return {'status': 'ok'}, 200
+
 
 @app.route('/')
 def index():
@@ -1130,9 +1160,6 @@ def edit_question(question_id):
     return redirect(url_for('admin'))
 
 
-with app.app_context():
-    db.create_all()
-    seed_data()
-
 if __name__ == '__main__':
+    ensure_database_initialized()
     app.run(debug=True)

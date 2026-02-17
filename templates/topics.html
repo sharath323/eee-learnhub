@@ -31,7 +31,7 @@
 
         <div class="topic-list">
             {% for topic in topics %}
-                <div class="topic-card" onclick="location.href='{{ url_for('learning', topic_id=topic.id) }}'">
+                <a class="topic-card topic-card-link tap-card" href="{{ url_for('learning', topic_id=topic.id) }}" data-tap-nav>
                     <div style="display: flex; justify-content: space-between; align-items: center;">
                         <span>{{ topic.name }}</span>
                         {% if topic_progress[topic.id].done %}
@@ -41,12 +41,13 @@
                     <div class="topic-meta">
                         {{ topic_progress[topic.id].completed }}/{{ topic_progress[topic.id].total }} videos
                     </div>
-                </div>
+                </a>
             {% else %}
                 <p>No topics found for this subject.</p>
             {% endfor %}
         </div>
     </main>
 
+    <script src="{{ url_for('static', filename='js/tap-feedback.js') }}"></script>
 </body>
 </html>

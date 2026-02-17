@@ -1,32 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>EEE LearnHub | Dashboard</title>
-	<link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EEE LearnHub | Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
 </head>
 <body>
 
-	<header class="navbar">
-		<h2>EEE LearnHub ⚡</h2>
-		<button class="logout-btn">Logout</button>
-	</header>
+    <header class="navbar">
+        <h2>EEE LearnHub &#9889;</h2>
+        <a class="logout-btn" href="{{ url_for('logout') }}">Logout</a>
+    </header>
 
-	<main class="container">
-		<h3>Select Your Semester</h3>
+    <main class="container">
+        <h3>Select Your Semester</h3>
 
-		<div class="semester-grid">
-			<div class="card" onclick="location.href='{{ url_for('subjects') }}'">Semester 1</div>
-			<div class="card" onclick="location.href='{{ url_for('subjects') }}'">Semester 2</div>
-			<div class="card" onclick="location.href='{{ url_for('subjects') }}'">Semester 3</div>
-			<div class="card" onclick="location.href='{{ url_for('subjects') }}'">Semester 4</div>
-			<div class="card" onclick="location.href='{{ url_for('subjects') }}'">Semester 5</div>
-			<div class="card" onclick="location.href='{{ url_for('subjects') }}'">Semester 6</div>
-			<div class="card" onclick="location.href='{{ url_for('subjects') }}'">Semester 7</div>
-			<div class="card" onclick="location.href='{{ url_for('subjects') }}'">Semester 8</div>
-		</div>
-	</main>
+        <div class="semester-grid">
+            <a class="card tap-card" href="{{ url_for('subjects') }}" data-tap-nav>Semester 1</a>
+            <a class="card tap-card" href="{{ url_for('subjects') }}" data-tap-nav>Semester 2</a>
+            <a class="card tap-card" href="{{ url_for('subjects') }}" data-tap-nav>Semester 3</a>
+            <a class="card tap-card" href="{{ url_for('subjects') }}" data-tap-nav>Semester 4</a>
+            <a class="card tap-card" href="{{ url_for('subjects') }}" data-tap-nav>Semester 5</a>
+            <a class="card tap-card" href="{{ url_for('subjects') }}" data-tap-nav>Semester 6</a>
+            <a class="card tap-card" href="{{ url_for('subjects') }}" data-tap-nav>Semester 7</a>
+            <a class="card tap-card" href="{{ url_for('subjects') }}" data-tap-nav>Semester 8</a>
+        </div>
+    </main>
 
+    <script src="{{ url_for('static', filename='js/tap-feedback.js') }}"></script>
 </body>
 </html>

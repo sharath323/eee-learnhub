@@ -37,7 +37,7 @@
 
         <div class="subject-grid">
             {% for subject in subjects %}
-                <div class="card" onclick="location.href='{{ url_for('topics', subject_id=subject.id) }}'">
+                <a class="card card-link tap-card" href="{{ url_for('topics', subject_id=subject.id) }}" data-tap-nav>
                     <div style="font-weight: 600;">{{ subject.name }}</div>
                     <div class="progress-wrap">
                         <div class="progress-bar" style="width: {{ progress[subject.id].percent }}%;"></div>
@@ -46,12 +46,13 @@
                         {{ progress[subject.id].percent }}% ({{ progress[subject.id].completed }}/{{ progress[subject.id].total }} videos)
                     </div>
                     <div style="margin-top: 6px;"></div>
-                </div>
+                </a>
             {% else %}
                 <p>No subjects found. Add data to the database.</p>
             {% endfor %}
         </div>
     </main>
 
+    <script src="{{ url_for('static', filename='js/tap-feedback.js') }}"></script>
 </body>
 </html>

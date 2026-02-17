@@ -52,6 +52,9 @@ body {
     border-radius: 999px;
     cursor: pointer;
     font-weight: 600;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
     transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
 }
 
@@ -83,6 +86,7 @@ body {
 
 .card {
     background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+    display: block;
     padding: 30px 20px;
     text-align: center;
     border-radius: 18px;
@@ -118,6 +122,19 @@ body {
     font-size: 16px;
     font-weight: 600;
     color: var(--text);
+    text-decoration: none;
+}
+
+.tap-card {
+    -webkit-tap-highlight-color: transparent;
+}
+
+.tap-card.is-pressed {
+    transform: translateY(-2px) scale(0.988);
+}
+
+.tap-card.is-loading {
+    opacity: 0.95;
 }
 
 .card:nth-child(1) { animation-delay: 0.05s; }
@@ -137,5 +154,19 @@ body {
     to {
         opacity: 1;
         transform: translateY(0) scale(1);
+    }
+}
+
+@media (hover: none) {
+    .card:hover {
+        transform: none;
+        box-shadow: var(--shadow);
+        border-color: rgba(148, 163, 184, 0.4);
+    }
+
+    .tap-card.is-pressed {
+        transform: scale(0.985);
+        box-shadow: 0 14px 30px rgba(15, 23, 42, 0.2);
+        border-color: rgba(20, 184, 166, 0.6);
     }
 }
